@@ -71,11 +71,15 @@ def test_get_users_leaderboard():
         create_response = requests.post(f"{ENDPOINT}/users/create", json=payload)
         assert create_response.status_code == HTTPStatus.CREATED
         users.append(create_response.json()["id"])
-    payload = {"type": "list", "sort": "asc"}
-    get_response = requests.get(f"{ENDPOINT}/users/leaderboard", json=payload)
+    payload_list = {"type": "list", "sort": "asc"}
+    get_response = requests.get(f"{ENDPOINT}/users/leaderboard", json=payload_list)
     leaderboard = get_response.json()["users"]
     assert isinstance(leaderboard, list)
     assert len(leaderboard) == n
+
+    payload_graph = {"type": "graph"}
+    get_response = requests.get(f"{ENDPOINT}/users/leaderboard", json=payload_graph)
+    assert get_response.text == '<img src= "/static/users_leaderboard.png">'
 
     for user_id in users:
         delete_response = requests.delete(f"{ENDPOINT}/users/{user_id}")

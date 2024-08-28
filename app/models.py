@@ -55,7 +55,7 @@ class Contest:
 
     @staticmethod
     def is_valid_id(contest_id):
-        return contest_id >= 0 and contest_id < len(CONTESTS)
+        return 0 <= contest_id < len(CONTESTS) and CONTESTS[contest_id].status_del != "deleted"
 
     def repr(self):
         return f'{self.id} {self.name} {self.sport}'

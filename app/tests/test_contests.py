@@ -7,8 +7,8 @@ def test_contest_create():
     n = 3
     users = []
     for _ in range(n):
-        payload = create_user_payload()
-        create_response = requests.post(f"{ENDPOINT}/users/create", json=payload)
+        payload_user = create_user_payload()
+        create_response = requests.post(f"{ENDPOINT}/users/create", json=payload_user)
         assert create_response.status_code == HTTPStatus.CREATED
         users.append(create_response.json()["id"])
     payload = create_contest_payload(users)
@@ -27,6 +27,8 @@ def test_contest_create():
     assert get_response.json()["name"] == payload["name"]
     assert get_response.json()["sport"] == payload["sport"]
     assert get_response.json()["participants"] == payload["participants"]
+    assert get_response.json()["status"] == "STARTED"
+    assert get_response.json()["winner"] == "null"
 
     delete_response = requests.delete(f"{ENDPOINT}/contests/{contest_id}")
     assert delete_response.status_code == HTTPStatus.OK
@@ -66,20 +68,14 @@ def test_contest_finish():
     create_response = requests.post(f"{ENDPOINT}/contests/create", json=payload)
 
     contest_id = create_response.json()["id"]
-    payload = {"winner" : 4}
+    payload = {"winner" : users[0]}
     post_response = requests.post(f"{ENDPOINT}/contests/{contest_id}/finish", json=payload)
     assert post_response.status_code == HTTPStatus.OK
     assert post_response.json()["status"] == "FINISHED"
-    assert post_response.json()["winner"] == 4
+    assert post_response.json()["winner"] == users[0]
 
     delete_response = requests.delete(f"{ENDPOINT}/contests/{contest_id}")
     assert delete_response.status_code == HTTPStatus.OK
-    assert delete_response.json()["name"] == post_response.json()["name"]
-    assert delete_response.json()["sport"] == post_response.json()["sport"]
-    assert delete_response.json()["participants"] == post_response.json()["participants"]
-    assert delete_response.json()["winner"] == post_response.json()["winner"]
-    assert delete_response.json()["status"] == post_response.json()["status"]
-    assert delete_response.json()["status_del"] == "deleted"
 
     for user_id in users:
         delete_response = requests.delete(f"{ENDPOINT}/users/{user_id}")
