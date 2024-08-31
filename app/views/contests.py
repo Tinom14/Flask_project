@@ -34,7 +34,7 @@ def contest_create():
 @app.get('/contests/<int:contest_id>')
 def get_contest(contest_id):
     if not models.Contest.is_valid_id(contest_id):
-        return Response(response='Соревнования с таким номером не существует',status=HTTPStatus.NOT_FOUND)
+        return Response(response='Соревнования с таким номером не существует', status=HTTPStatus.NOT_FOUND)
     contest = CONTESTS[contest_id]
     return Response(
         json.dumps(contest.to_dict()),
@@ -66,7 +66,7 @@ def contest_finish(contest_id):
 @app.delete('/contests/<int:contest_id>')
 def delete_contest(contest_id):
     if not models.Contest.is_valid_id(contest_id):
-        return Response(response='Соревнования с таким номером не существует',status=HTTPStatus.NOT_FOUND)
+        return Response(response='Соревнования с таким номером не существует', status=HTTPStatus.NOT_FOUND)
     contest = CONTESTS[contest_id]
     contest.status_del = "deleted"
     del_contest = contest.to_dict()
@@ -76,4 +76,3 @@ def delete_contest(contest_id):
         HTTPStatus.OK,
         mimetype="application/json"
     )
-

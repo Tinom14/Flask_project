@@ -68,7 +68,7 @@ def test_contest_finish():
     create_response = requests.post(f"{ENDPOINT}/contests/create", json=payload)
 
     contest_id = create_response.json()["id"]
-    payload = {"winner" : users[0]}
+    payload = {"winner": users[0]}
     post_response = requests.post(f"{ENDPOINT}/contests/{contest_id}/finish", json=payload)
     assert post_response.status_code == HTTPStatus.OK
     assert post_response.json()["status"] == "FINISHED"
@@ -80,5 +80,3 @@ def test_contest_finish():
     for user_id in users:
         delete_response = requests.delete(f"{ENDPOINT}/users/{user_id}")
         assert delete_response.status_code == HTTPStatus.OK
-
-
